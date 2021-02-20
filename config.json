@@ -1,0 +1,18 @@
+{
+  "twitterData": {
+    "consumer_key": "",
+    "consumer_secret": "",
+    "access_token": "",
+    "access_token_secret": ""
+  },
+  "discordData": {
+    "token": "",
+    "successChannelID": ""
+  },
+  "groupInfo": {
+    "name": "Tweet Catcher",
+    "imageUrl": "https://i.imgur.com/FREJD5o.png",
+    "twitterId": "1243928606998499328",
+    "twitterHandle": "TweetCatcherBot"
+  }
+}

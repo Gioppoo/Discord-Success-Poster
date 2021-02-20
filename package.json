@@ -1,0 +1,26 @@
+{
+  "name": "discord-success-poster",
+  "version": "0.0.1",
+  "description": "Discord success bot with retweet and leaderboard support",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gioppoo/Discord-Success-Poster.git"
+  },
+  "author": "Gioppo",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Gioppoo/Discord-Success-Poster/issues"
+  },
+  "homepage": "https://github.com/Gioppoo/Discord-Success-Poster#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "discord.js": "^12.5.1",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7",
+    "twit": "^2.2.11"
+  }
+}
