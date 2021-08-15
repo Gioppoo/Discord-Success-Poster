@@ -16,10 +16,20 @@ Clone this repo and edit config.json with your details
 **twitterData** - Your twitter developer keys  
 **token** - Your discord bot token  
 **successChannelID** -  The ID of the success channel  
+**canDeleteSuccess** -  The key permission a user must have to delete others success  
+**canResetLeaderboard** -  The key permission a user must have to reset the leaderboard  
 **name** - Your server name  
 **imageUrl** - The logo of your server or of a random image (mandatory)  
 **twitterId** - Your server name  
 **twitterHandle** - The Twitter handle of your group (you can get it [here](https://tweeterid.com/))
+
+#### Key permission
+
+ADMINISTRATOR = Group administrator
+MANAGE_SERVER = A role with manage server permission
+MANAGE_MESSAGES = A role with manage messages permission
+etc..
+
 
 ### How it works
 
@@ -28,6 +38,6 @@ You will get a point for every image posted on the success channel (after the bo
 ### Bot commands
 
 *!leaderboard* - Shows the leaderboard  
-*!resetLeaderboard* - Reset the leaderboard (only server administrators can reset the leaderboard)
+*!resetLeaderboard* - Reset the leaderboard (only authorized users can reset the leaderboard)
 
 ![Alt Text](https://media.giphy.com/media/IcWzmQuWJnxBnlnxZn/giphy.gif)

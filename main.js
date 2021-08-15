@@ -53,11 +53,11 @@ client.on('message', async (msg) => {
     else if (msg.channel.id === discordData.successChannelID && msg.content.match(/(https\:\/\/twitter\.com\/)/))
     {
       const twitterId = msg.content.match(/(?:(?:\/status\/)([0-9]+))/i)
-
+      
       if (twitterId)
       {
-        T.get('statuses/show/:id', { id: twitterId[1] }, (err, data, response) => {
-          if (data.entities && data.entities.user_mentions && data.entities.media)
+        T.get('statuses/show/:id', { id: twitterId[1], include_entities: true }, (err, data, response) => {
+          if (data.entities && data.entities.user_mentions)
           {
             let tagged = false
             for (const mention of data.entities.user_mentions)
@@ -141,7 +141,7 @@ client.on('message', async (msg) => {
             "color": 3447003
           }})
     }
-    else if (msg.content == '!resetLeaderboard' && msg.member.hasPermission('ADMINISTRATOR'))
+    else if (msg.content == '!resetLeaderboard' && msg.member.hasPermission(discordData.canResetLeaderboard))
     {
       leaderboard = {}
       fs.writeFileSync(path.join(__dirname, 'leaderboard.json'), JSON.stringify(leaderboard, null, 2))
@@ -170,7 +170,7 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
         const messagOwner = urlData.match(/(?:(?:author\=)([0-9]+))/i)[1]
         const tweetId = urlData.match(/(?:(?:tweetId\=)([0-9]+))/i)[1]
 
-        if (messagOwner == user.id || member.hasPermission('ADMINISTRATOR'))
+        if (messagOwner == user.id || member.hasPermission(discordData.canDeleteSuccess))
         {
           T.post('statuses/destroy/:id', { id: tweetId }, function (err, data, response) {
             messageReaction.message.edit({embed: {
