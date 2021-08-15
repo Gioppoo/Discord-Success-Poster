@@ -25,9 +25,9 @@ Clone this repo and edit config.json with your details
 
 #### Key permission
 
-ADMINISTRATOR = Group administrator
-MANAGE_SERVER = A role with manage server permission
-MANAGE_MESSAGES = A role with manage messages permission
+ADMINISTRATOR = Group administrator  
+MANAGE_SERVER = A role with manage server permission  
+MANAGE_MESSAGES = A role with manage messages permission  
 etc..
 
 
