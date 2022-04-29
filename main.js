@@ -34,7 +34,17 @@ client.on('message', async (msg) => {
       const image = await axios.get(urls[0], { responseType: 'arraybuffer' })
 
       T.post('media/upload', { media_data: Buffer.from(image.data).toString('base64') }, function (err, data, response) {
+        if (err)
+        {
+          console.error("An error occurred uploading the media:", err)
+          return
+        }
         T.post('statuses/update', { status: 'Success posted in ' + groupInfo.name + (msg.content? ' | '+msg.content: ''), media_ids: [data.media_id_string] }, function (err, data, response) {
+          if (err)
+          {
+            console.error("An error occurred posting the tweet:", err)
+            return
+          }
           msg.channel.send({embed: {
             "title": "Tweet was posted! React with :wastebasket: to delete",
             "description": "You've earned a point on our rewards leaderboard!",
@@ -53,10 +63,15 @@ client.on('message', async (msg) => {
     else if (msg.channel.id === discordData.successChannelID && msg.content.match(/(https\:\/\/twitter\.com\/)/))
     {
       const twitterId = msg.content.match(/(?:(?:\/status\/)([0-9]+))/i)
-      
+
       if (twitterId)
       {
         T.get('statuses/show/:id', { id: twitterId[1], include_entities: true }, (err, data, response) => {
+          if (err)
+          {
+            console.error("An error occurred searching the tweet:", err)
+            return
+          }
           if (data.entities && data.entities.user_mentions)
           {
             let tagged = false
@@ -136,20 +151,64 @@ client.on('message', async (msg) => {
       }
 
       msg.channel.send({embed: {
-            "title": "Leaderboard",
-            "description": leaderboardText,
-            "color": 3447003
-          }})
+        "title": "Leaderboard",
+        "description": leaderboardText,
+        "color": 3447003
+      }})
     }
     else if (msg.content == '!resetLeaderboard' && msg.member.hasPermission(discordData.canResetLeaderboard))
     {
       leaderboard = {}
       fs.writeFileSync(path.join(__dirname, 'leaderboard.json'), JSON.stringify(leaderboard, null, 2))
       msg.channel.send({embed: {
-            "title": "Leaderboard resetted",
-            "description": '',
-            "color": 3447003
-          }})
+        "title": "Leaderboard has been reset",
+        "description": '',
+        "color": 3447003
+      }})
+    }
+    else if (msg.content.includes('!addPoint') && msg.member.hasPermission(discordData.canDeleteSuccess))
+    {
+      const messageData = msg.content.match(/(?<=\!addPoint)s? +\<\@(\d+)\> +(\d+)/)
+
+      if (messageData)
+      {
+        editScore(messageData[1], parseInt(messageData[2]))
+        msg.channel.send({embed: {
+          "title": "Points added",
+          "description": 'Added '+messageData[2]+' point(s) to <@'+messageData[1]+'>',
+          "color": 3447003
+        }})
+      }
+      else
+      {
+        msg.channel.send({embed: {
+          "title": "Invalid command format",
+          "description": '!addPoint [@user] [points to add]',
+          "color": 3447003
+        }})
+      }
+    }
+    else if (msg.content.includes('!removePoint') && msg.member.hasPermission(discordData.canDeleteSuccess))
+    {
+      const messageData = msg.content.match(/(?<=\!removePoint)s? +\<\@(\d+)\> +(\d+)/)
+
+      if (messageData)
+      {
+        editScore(messageData[1], -(parseInt(messageData[2])))
+        msg.channel.send({embed: {
+          "title": "Points removed",
+          "description": 'Removed '+messageData[2]+' point(s) to <@'+messageData[1]+'>',
+          "color": 3447003
+        }})
+      }
+      else
+      {
+        msg.channel.send({embed: {
+          "title": "Invalid command format",
+          "description": '!removePoint [@user] [points to remove]',
+          "color": 3447003
+        }})
+      }
     }
   }
   catch (e)
@@ -173,6 +232,11 @@ client.on('messageReactionAdd', async (messageReaction, user) => {
         if (messagOwner == user.id || member.hasPermission(discordData.canDeleteSuccess))
         {
           T.post('statuses/destroy/:id', { id: tweetId }, function (err, data, response) {
+            if (err)
+            {
+              console.error("An error occurred deleting the tweet:", err)
+              return
+            }
             messageReaction.message.edit({embed: {
               "title": "Tweet was deleted!",
               "description": "Make sure to double-check images before posting",
@@ -233,3 +297,4 @@ async function editScore (userId, n)
 }
 
 client.login(discordData.token)
+console.log("Running")
